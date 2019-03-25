@@ -1,0 +1,9 @@
+{
+    "geolastic_type": {
+        "properties": {
+            "point": {
+                "type": "geo_point"
+            }
+        }
+    }
+}
