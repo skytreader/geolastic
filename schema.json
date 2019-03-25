@@ -1,5 +1,6 @@
 {
     "geolastic_type": {
+        "dynamic": "strict",
         "properties": {
             "point": {
                 "type": "geo_point"
