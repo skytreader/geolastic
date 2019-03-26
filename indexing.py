@@ -1,6 +1,8 @@
 from elasticsearch import Elasticsearch
+from faker import Faker
 
 import json
+import random
 import time
 
 def index_doc(es_client, index, doc_type, record):
@@ -22,7 +24,6 @@ def search(es_client, index, lat, lon):
                         }
                     }
                 }
-                
             }
         }
     }
@@ -31,6 +32,7 @@ def search(es_client, index, lat, lon):
 
 if __name__ == "__main__":
     es = Elasticsearch([{"host": "localhost", "port": 9200}])
+    fake = Faker()
     backoff_base = 2
     backoff_exp = 0
 
@@ -40,8 +42,11 @@ if __name__ == "__main__":
         es = Elasticsearch([{"host": "localhost", "port": 9200}])
 
     print("finally, connected")
-    print("indexing...", end="")
-    index_doc(es, "geolastic", "geolastic_type", {"point": {"lat": 14.35, "lon": 120.56}})
-    print("done")
+    for i in range(1000):
+        print("indexing %s..." % (i + 1), end="")
+        latlon = fake.local_latlng(country_code=random.choice(("ID", "PH")), coords_only=True)
+        index_doc(es, "geolastic", "geolastic_type", {"point": {"lat": float(latlon[0]), "lon": float(latlon[1])}})
+        print("done")
+
     print("searching...")
     print(search(es, "geolastic", lat=14.35, lon=120.56))
